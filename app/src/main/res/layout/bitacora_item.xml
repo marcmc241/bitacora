@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
-    android:paddingLeft="16dp">
+    android:paddingLeft="16dp"
+    android:paddingStart="16dp">
 
 
     <LinearLayout
@@ -16,21 +17,22 @@
 
         <TextView
             android:id="@+id/text"
-            android:layout_width="wrap_content"
+            android:layout_width="27dp"
             android:layout_height="match_parent"
             android:layout_weight="0.93"
+            android:gravity="start"
             android:padding="16dp"
-            android:text="text"
+            android:text="@string/text"
             android:textAlignment="textStart"
             android:textColor="#000"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/Data"
-            android:layout_width="69dp"
+            android:id="@+id/data"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:padding="8dp"
-            android:text="Data"
+            android:text="@string/data"
             android:textAlignment="center" />
 
     </LinearLayout>

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Bitacora</string>
     <string name="confirm">Confirmar</string>
+    <string name="data">Data</string>
+    <string name="text">text</string>
+    <string name="ok">Ok</string>
+    <string name="insert_new_text">Insert new text</string>
 </resources>

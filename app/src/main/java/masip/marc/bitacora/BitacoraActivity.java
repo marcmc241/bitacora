@@ -2,6 +2,7 @@ package masip.marc.bitacora;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,12 +30,13 @@ public class BitacoraActivity extends AppCompatActivity {
     private ArrayList<BitacoraItem> items; // Model de dades (array de BitacoraItem)
     private BitacoraListAdapter adapter;
     private EditText new_item;
+    private int editpos;
 
     private void writeItemList(){//agafar els items i guardar-los en un fitxer
         try {
             FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);//en privat només te permís d'accedir als fitxers la pròpia app
             for (BitacoraItem item:items) {//per cada shoppingitem en l'array items
-                String line = String.format("%llu;%s\n", item.getDate().getTime(), item.getText());
+                String line = String.format("%d;%s\n", item.getDate().getTime(), item.getText());
                 fos.write(line.getBytes());
             }
             fos.close();//tanquem el fitxer
@@ -88,7 +90,7 @@ public class BitacoraActivity extends AppCompatActivity {
 
 
         if(!readItemList()){
-            Toast.makeText(this, "Benvingut al ShoppingList(TM)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Benvingut al Bitacora(TM)", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -105,9 +107,15 @@ public class BitacoraActivity extends AppCompatActivity {
                 return true;
             }
         });
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                onEditItem(pos);
+            }
+        });
 
         //exemple d'ús de date
-        Date date = new Date();//data en ms des de 1970 (en base a l'instant actual del dispositiu)
+        /*Date date = new Date();//data en ms des de 1970 (en base a l'instant actual del dispositiu)
         Calendar calendar = new GregorianCalendar();//creem un calendari. el calendari només el creem a l'inici i l'anem utilitzant on sigui
         calendar.setTime(date);//posem el calendari a aquesta data
         int year = calendar.get(Calendar.YEAR);//obtenim l'any
@@ -116,7 +124,15 @@ public class BitacoraActivity extends AppCompatActivity {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int min = calendar.get(Calendar.MINUTE);
 
-        Toast.makeText(this, String.format("%02d/%02d/%04d %02d:%02d", day, month+1, year, hour, min), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, String.format("%02d/%02d/%04d %02d:%02d", day, month+1, year, hour, min), Toast.LENGTH_LONG).show();*/
+    }
+
+    private void onEditItem(int pos) {
+        String text = items.get(pos).getText();
+        Intent intent = new Intent(this, ActivityEditBitacoraItem.class);//intent ens permet transmetre info entre activitats
+        intent.putExtra("text", text);//insertar text a l'intent
+        editpos = pos;
+        startActivityForResult(intent, 1);
     }
 
     private void onRemoveItem(final int pos) {
@@ -146,6 +162,16 @@ public class BitacoraActivity extends AppCompatActivity {
             new_item.setText("");
             list.smoothScrollToPosition(items.size() - 1);
         }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+                if (resultCode == RESULT_OK){//si ha clicat a save (i no ha tornat amb el botó back
+                    String text = data.getStringExtra("text");//recollim el text de l'intent
+                    items.get(editpos).setText(text);
+                    adapter.notifyDataSetChanged();
+                }
+
     }
 }//shift+f6 = refractor (canviar nom a tot arreu)
 //ctrl+k = commit

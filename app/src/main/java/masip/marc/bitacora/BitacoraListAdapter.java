@@ -30,10 +30,10 @@ public class BitacoraListAdapter extends ArrayAdapter<BitacoraItem> {
         }
 
         TextView text = (TextView) root.findViewById(R.id.text);
+        TextView date = (TextView) root.findViewById(R.id.data);
         BitacoraItem item = getItem(position);
         text.setText(item.getText());
-        TextView date = (TextView) root.findViewById(R.id.Data);
-        //date.setText(getDate());----------------------------
+        date.setText(item.getDateString());
         return root;
     }
 }
